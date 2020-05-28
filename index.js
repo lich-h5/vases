@@ -1,5 +1,7 @@
 import VaseDivider from "./packages/VaseDivider";
+import VaseImage from "./packages/VaseImage/";
 
 export {
-    VaseDivider
+    VaseDivider,
+    VaseImage
 }

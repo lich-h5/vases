@@ -23,6 +23,6 @@
   },
   "homepage": "https://github.com/jdzchao/vases#readme",
   "dependencies": {
-    "vue": "^2.5.22"
+    "vue": "^2.6.11"
   }
 }

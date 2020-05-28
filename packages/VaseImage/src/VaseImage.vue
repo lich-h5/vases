@@ -1,62 +1,21 @@
 <template>
-    <div class="el-image">
-        <slot v-if="loading" name="placeholder">
-            <div class="el-image__placeholder"></div>
-        </slot>
-        <slot v-else-if="error" name="error">
-            <div class="el-image__error">{{ t('el.image.error') }}</div>
-        </slot>
-        <img
-                v-else
-                class="el-image__inner"
-                v-bind="$attrs"
-                v-on="$listeners"
-                @click="clickHandler"
-                :src="src"
-                :style="imageStyle"
-                :class="{ 'el-image__inner--center': alignCenter, 'el-image__preview': preview }">
-        <image-viewer :z-index="zIndex" v-if="preview && showViewer" :on-close="closeViewer" :url-list="previewSrcList"/>
+    <div class="vase-image" :style="imageStyle">
+        <img v-bind="$attrs" v-on="$listeners" :src="src" alt=""/>
     </div>
 </template>
 
 <script>
-    import ImageViewer from './image-viewer';
-    import { on, off, getScrollContainer, isInContainer } from 'element-ui/src/utils/dom';
-    import { isString, isHtmlElement } from 'element-ui/src/utils/types';
-    import throttle from 'throttle-debounce/throttle';
-
-    const isSupportObjectFit = () => document.documentElement.style.objectFit !== undefined;
-
-    const ObjectFit = {
-        NONE: 'none',
-        CONTAIN: 'contain',
-        COVER: 'cover',
-        FILL: 'fill',
-        SCALE_DOWN: 'scale-down'
-    };
-
     export default {
-        name: 'ElImage',
+        name: 'VaseImage',
 
         inheritAttrs: false,
 
-        components: {
-            ImageViewer
-        },
-
         props: {
             src: String,
-            fit: String,
+            mode: String,
             lazy: Boolean,
-            scrollContainer: {},
-            previewSrcList: {
-                type: Array,
-                default: () => []
-            },
-            zIndex: {
-                type: Number,
-                default: 2000
-            }
+            width: "",
+            height: "",
         },
 
         data() {
@@ -66,27 +25,60 @@
                 show: !this.lazy,
                 imageWidth: 0,
                 imageHeight: 0,
-                showViewer: false
             };
         },
 
         computed: {
             imageStyle() {
-                const { fit } = this;
-                if (!this.$isServer && fit) {
-                    return isSupportObjectFit()
-                        ? { 'object-fit': fit }
-                        : this.getImageStyle(fit);
+                if (this.loading) return;
+                switch (this.mode) {
+                    case "cover":
+                    case "contain":
+                        return {
+                            "background-image": "url('" + this.src + "')",
+                            "background-position": "center center",
+                            "background-repeat": "no-repeat",
+                            "background-size": this.mode,
+                            "width": this.width,
+                            "height": this.height,
+                        }
+                    case "fitWidth":
+                        return {
+                            "background-image": "url('" + this.src + "')",
+                            "background-position": "center center",
+                            "background-repeat": "no-repeat",
+                            "background-size": this.width + " " + this.fitWithWidth,
+                            "width": this.width,
+                            "height": this.fitWithWidth + "px",
+                        }
+                    case "fitHeight":
+                        return {
+                            "background-image": "url('" + this.src + "')",
+                            "background-position": "center center",
+                            "background-repeat": "no-repeat",
+                            "background-size": this.fitWithHeight + " " + this.height,
+                            "width": this.fitWithHeight + "px",
+                            "height": this.height,
+                        }
+                    default:
+                        return {
+                            "background-image": "url('" + this.src + "')",
+                            "background-position": "center center",
+                            "background-repeat": "no-repeat",
+                            "background-size": this.width + " " + this.height,
+                            "width": this.width,
+                            "height": this.height,
+                        }
                 }
-                return {};
             },
-            alignCenter() {
-                return !this.$isServer && !isSupportObjectFit() && this.fit !== ObjectFit.FILL;
+            fitWithWidth() {
+                let scale = this.$el.offsetWidth / this.imageWidth
+                return (scale * this.imageHeight)
             },
-            preview() {
-                const { previewSrcList } = this;
-                return Array.isArray(previewSrcList) && previewSrcList.length > 0;
-            }
+            fitWithHeight() {
+                let scale = this.$el.offsetHeight / this.imageHeight
+                return (scale * this.imageWidth)
+            },
         },
 
         watch: {
@@ -135,6 +127,7 @@
                 this.imageWidth = img.width;
                 this.imageHeight = img.height;
                 this.loading = false;
+                this.$emit('load', e);
             },
             handleError(e) {
                 this.loading = false;
@@ -142,77 +135,57 @@
                 this.$emit('error', e);
             },
             handleLazyLoad() {
-                if (isInContainer(this.$el, this._scrollContainer)) {
-                    this.show = true;
-                    this.removeLazyLoadListener();
-                }
+                // if (isInContainer(this.$el, this._scrollContainer)) {
+                //     this.show = true;
+                //     this.removeLazyLoadListener();
+                // }
             },
             addLazyLoadListener() {
-                if (this.$isServer) return;
-
-                const { scrollContainer } = this;
-                let _scrollContainer = null;
-
-                if (isHtmlElement(scrollContainer)) {
-                    _scrollContainer = scrollContainer;
-                } else if (isString(scrollContainer)) {
-                    _scrollContainer = document.querySelector(scrollContainer);
-                } else {
-                    _scrollContainer = getScrollContainer(this.$el);
-                }
-
-                if (_scrollContainer) {
-                    this._scrollContainer = _scrollContainer;
-                    this._lazyLoadHandler = throttle(200, this.handleLazyLoad);
-                    on(_scrollContainer, 'scroll', this._lazyLoadHandler);
-                    this.handleLazyLoad();
-                }
+                // if (this.$isServer) return;
+                //
+                // const {scrollContainer} = this;
+                // let _scrollContainer = null;
+                //
+                // if (isHtmlElement(scrollContainer)) {
+                //     _scrollContainer = scrollContainer;
+                // } else if (isString(scrollContainer)) {
+                //     _scrollContainer = document.querySelector(scrollContainer);
+                // } else {
+                //     _scrollContainer = getScrollContainer(this.$el);
+                // }
+                //
+                // if (_scrollContainer) {
+                //     this._scrollContainer = _scrollContainer;
+                //     this._lazyLoadHandler = throttle(200, this.handleLazyLoad);
+                //     on(_scrollContainer, 'scroll', this._lazyLoadHandler);
+                //     this.handleLazyLoad();
+                // }
             },
             removeLazyLoadListener() {
-                const { _scrollContainer, _lazyLoadHandler } = this;
-
-                if (this.$isServer || !_scrollContainer || !_lazyLoadHandler) return;
-
-                off(_scrollContainer, 'scroll', _lazyLoadHandler);
-                this._scrollContainer = null;
-                this._lazyLoadHandler = null;
+                // const {_scrollContainer, _lazyLoadHandler} = this;
+                //
+                // if (this.$isServer || !_scrollContainer || !_lazyLoadHandler) return;
+                //
+                // off(_scrollContainer, 'scroll', _lazyLoadHandler);
+                // this._scrollContainer = null;
+                // this._lazyLoadHandler = null;
             },
-            /**
-             * simulate object-fit behavior to compatible with IE11 and other browsers which not support object-fit
-             */
-            getImageStyle(fit) {
-                const { imageWidth, imageHeight } = this;
-                const {
-                    clientWidth: containerWidth,
-                    clientHeight: containerHeight
-                } = this.$el;
-
-                if (!imageWidth || !imageHeight || !containerWidth || !containerHeight) return {};
-
-                const vertical = imageWidth / imageHeight < 1;
-
-                if (fit === ObjectFit.SCALE_DOWN) {
-                    const isSmaller = imageWidth < containerWidth && imageHeight < containerHeight;
-                    fit = isSmaller ? ObjectFit.NONE : ObjectFit.CONTAIN;
-                }
-
-                switch (fit) {
-                    case ObjectFit.NONE:
-                        return { width: 'auto', height: 'auto' };
-                    case ObjectFit.CONTAIN:
-                        return vertical ? { width: 'auto' } : { height: 'auto' };
-                    case ObjectFit.COVER:
-                        return vertical ? { height: 'auto' } : { width: 'auto' };
-                    default:
-                        return {};
-                }
-            },
-            clickHandler() {
-                this.showViewer = true;
-            },
-            closeViewer() {
-                this.showViewer = false;
-            }
         }
     };
 </script>
+<style scoped>
+    .vase-image {
+        display: block;
+        overflow: hidden;
+    }
+
+    .vase-image img {
+        display: block;
+        opacity: 0;
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>

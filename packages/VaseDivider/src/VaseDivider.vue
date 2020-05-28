@@ -1,5 +1,5 @@
 <template>
-    <div id="vase-divider">
+    <div class="vase-divider">
         <span class="content">
             <slot></slot>
         </span>
@@ -13,7 +13,7 @@
 </script>
 
 <style scoped>
-    #vase-divider {
+    .vase-divider {
         display: -webkit-box;
         display: -moz-box;
         display: -ms-flexbox;
@@ -22,7 +22,7 @@
         align-items: center;
     }
 
-    #vase-divider::before, #vase-divider::after {
+    .vase-divider::before, .vase-divider::after {
         content: '';
         height: 1px;
         top: 50%;
@@ -30,11 +30,11 @@
         background: #dcdfe6;
     }
 
-    #vase-divider .content {
+    .vase-divider .content {
         margin: 0 10px;
     }
 
-    #vase-divider .content:empty {
+    .vase-divider .content:empty {
         display: none;
     }
 </style>
