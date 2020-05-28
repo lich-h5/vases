@@ -47,7 +47,7 @@
                             "background-image": "url('" + this.src + "')",
                             "background-position": "center center",
                             "background-repeat": "no-repeat",
-                            "background-size": this.width + " " + this.fitWithWidth,
+                            "background-size": this.width + " " + this.fitWithWidth + "px",
                             "width": this.width,
                             "height": this.fitWithWidth + "px",
                         }
@@ -56,7 +56,7 @@
                             "background-image": "url('" + this.src + "')",
                             "background-position": "center center",
                             "background-repeat": "no-repeat",
-                            "background-size": this.fitWithHeight + " " + this.height,
+                            "background-size": this.fitWithHeight + "px " + this.height,
                             "width": this.fitWithHeight + "px",
                             "height": this.height,
                         }
