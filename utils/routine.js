@@ -1,19 +1,37 @@
 /**
  * 节流
- * @param method
+ * @param fn
  * @param delay
+ * @returns {function(...[*]=)}
  */
-export function throttle(method, delay) {
-    let _this = throttle.prototype;
-    _this.current = new Date();
-    if (!_this.begin) {
-        _this.begin = _this.current;
+export function throttle(fn, delay) {
+    let timer = null;
+    let startTime = Date.now();
+    return function () {
+        const curTime = Date.now();
+        const remaining = delay - (curTime - startTime);
+        const context = this;
+        const args = arguments;
+        clearTimeout(timer);
+        if (remaining <= 0) {
+            fn.apply(context, args);
+            startTime = Date.now();
+        } else {
+            timer = setTimeout(fn, remaining);
+        }
     }
-    clearTimeout(_this.timer);
-    if (_this.current - _this.begin >= delay) {
-        method();
-        _this.begin = _this.current;
-    } else {
-        _this.timer = setTimeout(method, delay);
+}
+
+/**
+ * 防抖
+ * @param fn
+ * @param delay
+ * @returns {function(...[*]=)}
+ */
+export function debounce(fn, delay) {
+    let timeout = null;
+    return function () {
+        if (timeout !== null) clearTimeout(timeout);
+        timeout = setTimeout(fn, delay);
     }
 }
