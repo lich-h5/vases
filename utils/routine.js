@@ -5,21 +5,16 @@
  * @returns {function(...[*]=)}
  */
 export function throttle(fn, delay) {
-    let timer = null;
-    let startTime = Date.now();
+    let timer = undefined;
+    let lastCallTime = Date.now();
     return function () {
-        const curTime = Date.now();
-        const remaining = delay - (curTime - startTime);
-        const context = this;
-        const args = arguments;
-        clearTimeout(timer);
-        if (remaining <= 0) {
-            fn.apply(context, args);
-            startTime = Date.now();
-        } else {
-            timer = setTimeout(fn, remaining);
+        const timeSinceLastCall = Date.now() - lastCallTime;
+        const shouldCall = timeSinceLastCall >= delay;
+        if (shouldCall) {
+            timer = setTimeout((fn.apply(this, arguments), (timer = undefined)), delay);
+            lastCallTime = Date.now();
         }
-    }
+    };
 }
 
 /**
