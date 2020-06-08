@@ -19,7 +19,7 @@
             }
         },
         mounted() {
-            if (this.$parent) {
+            if (this.$parent && this.$parent.$el.hasOwnProperty("style")) {
                 this.$parent.$el.style.overflow = "hidden";
             }
             this.pageWidth = document.documentElement.clientWidth;
