@@ -7,9 +7,6 @@
 <script>
     export default {
         name: "VasePageItem",
-        props: {
-            direction: {type: String, default: ""},
-        },
         mounted() {
             if (!this.$parent && !this.$parent.$data.hasOwnProperty("items")) return;
             this.$parent.$data.items.push(this.$el)
