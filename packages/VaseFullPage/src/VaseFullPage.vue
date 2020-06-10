@@ -30,9 +30,9 @@
             this.$el.addEventListener("wheel", handleWheel);
 
             this.$el.addEventListener("touchstart", event => {
-                this.touchPosition = event.touches[0].pageY
+                this.touchPosition = event.touches[0].pageY;
             });
-            const handleTouchEnd = throttle(this.onTouchEnd, 500)
+            const handleTouchEnd = throttle(this.onTouchEnd, 500);
             this.$el.addEventListener("touchend", handleTouchEnd);
         },
         methods: {
@@ -63,6 +63,10 @@
                     this.$el.style.top = this.currentPosition + 'px'
                 }
             },
+            pageTo(num) {
+                this.currentPosition = -this.pageHeight * (this.items.length - 1)
+                this.$el.style.top = this.currentPosition + 'px'
+            }
         }
     }
 </script>
