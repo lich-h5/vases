@@ -45,9 +45,9 @@
             },
             onTouchEnd(e) {
                 const touchEndY = e.changedTouches[0].pageY
-                if (touchEndY - this.touchPosition < 0) { // 向上滑动, 页面向下滚动
+                if (touchEndY - this.touchPosition < -20) { // 向上滑动, 页面向下滚动
                     this.pageDown()
-                } else {
+                } else if (touchEndY - this.touchPosition > 20) {
                     this.pageUp()
                 }
             },
@@ -64,7 +64,7 @@
                 }
             },
             pageTo(num) {
-                this.currentPosition = -this.pageHeight * (this.items.length - 1)
+                this.currentPosition = -this.pageHeight * (num - 1)
                 this.$el.style.top = this.currentPosition + 'px'
             }
         }
