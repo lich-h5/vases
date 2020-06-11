@@ -6,7 +6,7 @@
                 <span>{{ title }}</span>
                 <span class="close-btn" v-show="closable" @click="closeByButton">X</span>
             </div>
-            <div class="drawer-body">
+            <div :class="bodyClass">
                 <slot/>
             </div>
         </div>
@@ -62,6 +62,11 @@
                 type: Boolean,
                 default: true
             },
+
+            bodyClass: {
+                type: String,
+                default: ""
+            }
         },
         computed: {
             maskClass: function () {
@@ -162,8 +167,5 @@
         cursor: pointer;
         height: 100%;
         padding-left: 20px;
-    }
-
-    .drawer-body {
     }
 </style>
