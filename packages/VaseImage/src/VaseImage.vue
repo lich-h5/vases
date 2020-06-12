@@ -1,6 +1,7 @@
 <template>
     <div class="vase-image" :style="imageStyle">
         <img v-bind="$attrs" v-on="$listeners" :src="src" alt=""/>
+        <slot/>
     </div>
 </template>
 
@@ -175,6 +176,7 @@
 </script>
 <style scoped>
     .vase-image {
+        position: relative;
         display: block;
         overflow: hidden;
     }

@@ -14,6 +14,7 @@
                 items: [],
                 pageWidth: 0,
                 pageHeight: 0,
+                currentPage: 0,
                 currentPosition: 0,
                 touchPosition: 0,
             }
@@ -55,17 +56,23 @@
                 if (this.currentPosition < 0) {
                     this.currentPosition = this.currentPosition + this.pageHeight
                     this.$el.style.top = this.currentPosition + 'px'
+                    this.currentPage--
+                    this.$emit("change", this.currentPage)
                 }
             },
             pageDown() {
                 if (this.currentPosition > -this.pageHeight * (this.items.length - 1)) {
                     this.currentPosition = this.currentPosition - this.pageHeight
                     this.$el.style.top = this.currentPosition + 'px'
+                    this.currentPage++
+                    this.$emit("change", this.currentPage)
                 }
             },
             pageTo(num) {
                 this.currentPosition = -this.pageHeight * (num - 1)
                 this.$el.style.top = this.currentPosition + 'px'
+                this.currentPage = num - 1
+                this.$emit("change", this.currentPage)
             }
         }
     }
