@@ -10,18 +10,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jdzchao/vases.git"
+    "url": "git+https://github.com/lich-h5/vases.git"
   },
   "keywords": [
     "vue",
     "css"
   ],
-  "author": "JDZCHAO",
+  "author": "Li Chao",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jdzchao/vases/issues"
+    "url": "https://github.com/lich-h5/vases/issues"
   },
-  "homepage": "https://github.com/jdzchao/vases#readme",
+  "homepage": "https://github.com/lich-h5/vases#readme",
   "dependencies": {
     "vue": "^2.6.11"
   }
